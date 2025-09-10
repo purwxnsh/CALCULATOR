@@ -133,3 +133,29 @@ st.markdown("""
     <span class="glow-red">PURWANSH CHAUDHARY</span> | Made with ❤️ in Python & Streamlit
 </div>
 """, unsafe_allow_html=True)
+# ----------------- Additional Buttons -----------------
+buttons = [
+    ["7️⃣","8️⃣","9️⃣","➗","%"],
+    ["4️⃣","5️⃣","6️⃣","✖️","√"],
+    ["1️⃣","2️⃣","3️⃣","➖","^"],
+    ["0️⃣",".","❌","C","➕"]
+]
+
+for row in buttons:
+    cols = st.columns(len(row))
+    for i, button in enumerate(row):
+        with cols[i]:
+            if st.button(button):
+                if button == "C":
+                    # Clear all input
+                    st.session_state.calc_input = ''
+                elif button == "❌":
+                    # Delete last character
+                    st.session_state.calc_input = st.session_state.calc_input[:-1]
+                elif button == "=":
+                    # Your calculate() function
+                    calculate()
+                else:
+                    # Add symbol to input
+                    st.session_state.calc_input += button.replace("➗","/").replace("✖️","*").replace("➖","-").replace("➕","+").replace("√","√").replace("^","^").replace("%","%").replace("️⃣","")
+
