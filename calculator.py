@@ -23,7 +23,7 @@ body {
     font-size: 22px;
     font-weight: bold;
     margin: 5px;
-    transition: 0.3s;
+    transition: 0.2s;
     position: relative;
     overflow: hidden;
 }
@@ -82,50 +82,39 @@ if 'calc_input' not in st.session_state:
 if 'history' not in st.session_state:
     st.session_state.history = []
 
-def add_to_input(symbol):
-    st.session_state.calc_input += str(symbol)
-
-def clear_input():
-    st.session_state.calc_input = ''
-
-def delete_last():
-    st.session_state.calc_input = st.session_state.calc_input[:-1]
-
-def calculate():
-    try:
-        expr = st.session_state.calc_input.replace("√","math.sqrt").replace("^","**").replace("%","/100")
-        result = str(eval(expr))
-        st.session_state.history.append(f"{st.session_state.calc_input} = {result}")
-        st.session_state.calc_input = result
-    except:
-        st.session_state.calc_input = "Error"
-
 # ----------------- Display -----------------
 st.markdown(f"<div class='display-box'>{st.session_state.calc_input}</div>", unsafe_allow_html=True)
 
-# ----------------- Buttons -----------------
+# ----------------- Fast Button Grid using Forms -----------------
 buttons = [
     ["7️⃣","8️⃣","9️⃣","➗","%"],
     ["4️⃣","5️⃣","6️⃣","✖️","√"],
     ["1️⃣","2️⃣","3️⃣","➖","^"],
     ["0️⃣",".","❌","C","➕"],
-    ["("," )"]
+    ["(",")","="]
 ]
 
 for row_index, row in enumerate(buttons):
     cols = st.columns(len(row))
     for col_index, button in enumerate(row):
         with cols[col_index]:
-            if st.button(button, key=f"btn_{row_index}_{col_index}"):
-                if button == "C":
-                    clear_input()
-                elif button == "❌":
-                    delete_last()
-                elif button == "=":
-                    calculate()
-                else:
-                    # Add symbol, replace emojis/operators with Python equivalents
-                    st.session_state.calc_input += button.replace("➗","/").replace("✖️","*").replace("➖","-").replace("➕","+").replace("√","√").replace("^","^").replace("%","%").replace("️⃣","")
+            with st.form(key=f"form_{row_index}_{col_index}", clear_on_submit=False):
+                submit = st.form_submit_button(button)
+                if submit:
+                    if button == "C":
+                        st.session_state.calc_input = ''
+                    elif button == "❌":
+                        st.session_state.calc_input = st.session_state.calc_input[:-1]
+                    elif button == "=":
+                        try:
+                            expr = st.session_state.calc_input.replace("√","math.sqrt").replace("^","**").replace("%","/100")
+                            result = str(eval(expr))
+                            st.session_state.history.append(f"{st.session_state.calc_input} = {result}")
+                            st.session_state.calc_input = result
+                        except:
+                            st.session_state.calc_input = "Error"
+                    else:
+                        st.session_state.calc_input += button.replace("➗","/").replace("✖️","*").replace("➖","-").replace("➕","+").replace("√","√").replace("^","^").replace("%","%").replace("️⃣","")
 
 # ----------------- History -----------------
 if st.session_state.history:
@@ -140,5 +129,3 @@ st.markdown("""
     <span class="glow-red">PURWANSH CHAUDHARY</span> | Made with ❤️ in Python & Streamlit
 </div>
 """, unsafe_allow_html=True)
-
-
