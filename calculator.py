@@ -74,7 +74,7 @@ body {
 
 # ----------------- Header -----------------
 st.markdown("<h1 style='color: #FFAE2B; text-align: center;'>🧮 Professional Calculator 🧮</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; font-size: 14px; color: rgba(0,0,0,0.6);'>Fast, colorful, fun, and feature-rich!</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; font-size: 14px; color: white;'>Fast, colorful, fun, and feature-rich!</p>", unsafe_allow_html=True)
 
 # ----------------- Calculator Logic -----------------
 if 'calc_input' not in st.session_state:
