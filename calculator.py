@@ -73,8 +73,8 @@ body {
 """, unsafe_allow_html=True)
 
 # ----------------- Header -----------------
-st.markdown("<h1 style='color: #FFAE2B; text-align: center;'>🧮 Professional Calculator 🧮</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; font-size: 14px; color: white;'>Fast, colorful, fun, and feature-rich!</p>", unsafe_allow_html=True)
+st.markdown("<h1 style='color: #F5B027; text-align: center;'>🧮 Professional Calculator 🧮</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; font-size: 14px; color: white;'>Fast, colorful, and feature-rich!</p>", unsafe_allow_html=True)
 
 # ----------------- Calculator Logic -----------------
 if 'calc_input' not in st.session_state:
@@ -87,6 +87,9 @@ def add_to_input(symbol):
 
 def clear_input():
     st.session_state.calc_input = ''
+
+def delete_last():
+    st.session_state.calc_input = st.session_state.calc_input[:-1]
 
 def calculate():
     try:
@@ -105,20 +108,24 @@ buttons = [
     ["7️⃣","8️⃣","9️⃣","➗","%"],
     ["4️⃣","5️⃣","6️⃣","✖️","√"],
     ["1️⃣","2️⃣","3️⃣","➖","^"],
-    ["0️⃣",".","C","=","➕"]
+    ["0️⃣",".","❌","C","➕"],
+    ["("," )"]
 ]
 
-for row in buttons:
+for row_index, row in enumerate(buttons):
     cols = st.columns(len(row))
-    for i, button in enumerate(row):
-        with cols[i]:
-            if st.button(button):
+    for col_index, button in enumerate(row):
+        with cols[col_index]:
+            if st.button(button, key=f"btn_{row_index}_{col_index}"):
                 if button == "C":
                     clear_input()
+                elif button == "❌":
+                    delete_last()
                 elif button == "=":
                     calculate()
                 else:
-                    add_to_input(button.replace("➗","/").replace("✖️","*").replace("➖","-").replace("➕","+").replace("√","√").replace("^","^").replace("%","%").replace("️⃣",""))
+                    # Add symbol, replace emojis/operators with Python equivalents
+                    st.session_state.calc_input += button.replace("➗","/").replace("✖️","*").replace("➖","-").replace("➕","+").replace("√","√").replace("^","^").replace("%","%").replace("️⃣","")
 
 # ----------------- History -----------------
 if st.session_state.history:
@@ -133,29 +140,5 @@ st.markdown("""
     <span class="glow-red">PURWANSH CHAUDHARY</span> | Made with ❤️ in Python & Streamlit
 </div>
 """, unsafe_allow_html=True)
-# ----------------- Additional Buttons -----------------
-buttons = [
-    ["7️⃣","8️⃣","9️⃣","➗","%"],
-    ["4️⃣","5️⃣","6️⃣","✖️","√"],
-    ["1️⃣","2️⃣","3️⃣","➖","^"],
-    ["0️⃣",".","❌","C","➕"]
-]
 
-for row in buttons:
-    cols = st.columns(len(row))
-    for i, button in enumerate(row):
-        with cols[i]:
-            if st.button(button):
-                if button == "C":
-                    # Clear all input
-                    st.session_state.calc_input = ''
-                elif button == "❌":
-                    # Delete last character
-                    st.session_state.calc_input = st.session_state.calc_input[:-1]
-                elif button == "=":
-                    # Your calculate() function
-                    calculate()
-                else:
-                    # Add symbol to input
-                    st.session_state.calc_input += button.replace("➗","/").replace("✖️","*").replace("➖","-").replace("➕","+").replace("√","√").replace("^","^").replace("%","%").replace("️⃣","")
 
